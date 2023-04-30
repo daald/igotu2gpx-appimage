@@ -1,0 +1,39 @@
+$ bzr diff --revision  227..228
+revno: 228
+committer: Daniel Alder <daald@users.noreply.github.com>
+branch nick: igotu2gpx
+timestamp: Sun 2016-08-07 15:20:58 +0200
+message:
+  Fix Year 2016 problem (Bug 1530670)
+  
+  It will always calculate the GPS year relative to the current system date, 12
+  years to the past and 4 years to the future. In other words: 0 will be
+  interpreted as 2016 in the years 2012..2027. When run in 2028 (and his GPS is
+  still alive) it will be interpreted as 2032 etc.
+  
+  Previous situation: The resulting year was always between 2000..2015 because
+  the year field in the device only has 4 bits.
+
+=== modified file 'src/lib/igotu/igotupoints.cpp'
+--- 227/src/lib/igotu/igotupoints.cpp	2013-05-18 12:54:49 +0000
++++ 228/src/lib/igotu/igotupoints.cpp	2016-08-07 13:20:58 +0000
+@@ -144,11 +144,13 @@
+     const unsigned sec = qFromBigEndian<quint16>
+         (reinterpret_cast<const uchar*>(record.data()) + 4);
+ 
+-    return QDateTime
+-        (QDate(2000 + ((date >> 20) & 0xf), (date >> 16) & 0xf,
+-               (date >> 11) & 0x1f),
+-         QTime((date >> 6) & 0x1f, date & 0x3f, sec / 1000, sec % 1000),
+-         Qt::UTC);
++    return QDateTime(
++        QDate(
++          ((QDate::currentDate().year() + 4 - ((date >> 20) & 0xf)) & 0xfff0) + ((date >> 20) & 0xf),
++          (date >> 16) & 0xf,
++          (date >> 11) & 0x1f),
++        QTime((date >> 6) & 0x1f, date & 0x3f, sec / 1000, sec % 1000),
++        Qt::UTC);
+ }
+ 
+ QString IgotuPoint::dateTimeString(int utcOffset) const
+

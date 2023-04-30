@@ -1,0 +1,2 @@
+#/etc/udev/rules.d/51-igotu2gpx.rules
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="0df7", ATTRS{idProduct}=="0900", GROUP="plugdev", MODE="0664"

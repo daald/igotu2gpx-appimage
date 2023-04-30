@@ -1,0 +1,46 @@
+--- src/src/lib/igotu/paths.cpp_orig	2020-02-09 01:37:49.285438282 +0000
++++ src/src/lib/igotu/paths.cpp	2020-02-09 01:41:12.904214377 +0000
+@@ -211,7 +211,12 @@
+ QString Paths::mainPluginDirectory()
+ {
+     QString result;
+-#if defined(Q_OS_MAC)
++#if defined(Q_OS_LINUX)
++    printf("setMarblePluginPath(%s)\n", getenv("MARBLE_PLUGIN_PATH"));
++    if (getenv("MARBLE_PLUGIN_PATH") != NULL) {
++        result = QLatin1String(getenv("MARBLE_PLUGIN_PATH"));
++    }
++#elif defined(Q_OS_MAC)
+     result = relativeToBaseDirectory(QStringList(QLatin1String("/PlugIns")),
+             QStringList()).value(0);
+ #elif defined(Q_OS_WIN32)
+@@ -224,7 +224,12 @@
+ QString Paths::mainDataDirectory()
+ {
+     QString result;
+-#if defined(Q_OS_MAC)
++#if defined(Q_OS_LINUX)
++    printf("setMarbleDataPath(%s)\n", getenv("MARBLE_DATA_PATH"));
++    if (getenv("MARBLE_DATA_PATH") != NULL) {
++        result = QLatin1String(getenv("MARBLE_DATA_PATH"));
++    }
++#elif defined(Q_OS_MAC)
+     result = relativeToBaseDirectory(QStringList(QLatin1String("/Resources")),
+             QStringList()).value(0);
+ #elif defined(Q_OS_WIN32)
+--- src/src/visualizers/marblevisualizer/marblevisualizer.cpp_orig	2020-02-09 22:17:24.613589780 +0000
++++ src/src/visualizers/marblevisualizer/marblevisualizer.cpp	2020-02-09 22:17:41.001446321 +0000
+@@ -99,12 +99,10 @@
+ {
+     delete tracks;
+ 
+-#if defined(Q_OS_MAC) || defined(Q_OS_WIN32)
+     MarbleDirs::setMarblePluginPath(Paths::mainPluginDirectory() +
+             QLatin1String("/marble"));
+     MarbleDirs::setMarbleDataPath(Paths::mainDataDirectory() +
+             QLatin1String("/marble"));
+-#endif
+     tracks = new MarbleWidget(this);
+     tracks->setObjectName(QLatin1String("tracks"));
+ 
+
