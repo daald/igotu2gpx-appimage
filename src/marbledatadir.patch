@@ -1,3 +1,5 @@
+todo: #include <stdio.h>
+
 --- src/src/lib/igotu/paths.cpp_orig	2020-02-09 01:37:49.285438282 +0000
 +++ src/src/lib/igotu/paths.cpp	2020-02-09 01:41:12.904214377 +0000
 @@ -211,7 +211,12 @@
