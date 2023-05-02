@@ -40,7 +40,8 @@ todo: #include <stdio.h>
      MarbleDirs::setMarblePluginPath(Paths::mainPluginDirectory() +
              QLatin1String("/marble"));
      MarbleDirs::setMarbleDataPath(Paths::mainDataDirectory() +
-             QLatin1String("/marble"));
+-            QLatin1String("/marble"));
++            QLatin1String("/marble/data"));
 -#endif
      tracks = new MarbleWidget(this);
      tracks->setObjectName(QLatin1String("tracks"));

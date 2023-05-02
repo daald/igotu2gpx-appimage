@@ -30,7 +30,6 @@ docker run --rm \
 
     qmake
     make clean all
-
     cd /workspace/build/igotu2gpx
 
     mkdir -p AppDir/usr/lib/
