@@ -24,8 +24,7 @@ docker run --rm \
     patch -Np1 </workspace/src/src/marbledatadir.patch
 
     echo 'CLEBS_DISABLED *= src/connections/libusb10connection' >localconfig.pri  # libusb1 doesn't work
-    #echo 'CLEBS_DISABLED *= src/connections/libusbconnection' >localconfig.pri  # libusb0.1 doesn't work either?
-    # Uncomment for release version
+    # Uncomment for release version:
     echo 'RELEASE = 1' >>localconfig.pri
 
     qmake
