@@ -26,6 +26,48 @@ Notes
 AppImage has extra support for packing qt5 code. Unfortunately, this is qt4 code, and I had to do some hacks to get it working. See build.sh.
 This is also the reason why I built this AppImage. The original code compiles for Ubuntu 14.04, newer versions lack support for qt4. This package has successfully been tested unter Ubuntu 22.04 though.
 
+Building
+--------
+
+Due to the limitations mentioned above, I found exactly one workflow which works. By now, I didn't write any CI script, but if you trust (or checked), you can run `./build.sh` from the command line. The only dependency is docker, everything else happens inside docker containers.
+
+This is roughly what the workflow does:
+
+    # set up build environment
+    docker build -t igotugps-buildenv-2023 buildenv-docker
+
+    # start and go into build environment
+    docker run --rm -ti igotugps-buildenv-2023
+
+    # in another window, if not using volumes, copy the source inside the container
+    docker cp src 5e0d53311203:/tmp
+
+    # extract
+    tar xpf /tmp/src/igotu2gpx_bzr227.tar.xz
+
+    cd igotu2gpx/
+    # patch
+    patch -Np1 </tmp//src/y2016.patch
+    patch -Np1 </tmp/src/marbledatadir.patch
+
+    # configure
+    echo 'CLEBS_DISABLED *= src/connections/libusb10connection' >localconfig.pri  # libusb1 doesn't work
+    echo 'RELEASE = 1' >>localconfig.pri
+
+    # build
+    qmake
+    make clean all
+
+the rest of build.sh is about packaging, I will not further explain that code here
+
+I successfully built the project on a Ubuntu 22.04 host with amd64 cpu
+
+Binary Release
+--------------
+
+See https://github.com/daald/igotu2gpx-appimage/releases/ for builds which work out-of-the-box
+
+
 License
 -------
 
